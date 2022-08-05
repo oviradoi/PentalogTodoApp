@@ -12,7 +12,7 @@
         static void InitializeDatabase()
         {
             using var dbContext = new TodoDbContext();
-            dbContext.Database.EnsureCreated();
+            dbContext.Database.Migrate();
         }
 
         static void Login()
