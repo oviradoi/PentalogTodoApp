@@ -40,7 +40,7 @@
             Console.WriteLine($"You have {user.Notes.Count} notes");
             foreach (var note in user.Notes)
             {
-                Console.WriteLine($"Note id={note.Id} text={note.Text}");
+                Console.WriteLine($"Note id={note.Id} text={note.Text} created={note.CreationDate}");
             }
 
         }
@@ -62,7 +62,7 @@
             Console.WriteLine("Enter the text of the note:");
             string text = Console.ReadLine();
 
-            Note note = new Note() { Text = text, UserId = _userId };
+            Note note = new Note() { Text = text, UserId = _userId, CreationDate = DateTime.Now };
 
             using var dbContext = new TodoDbContext();
             dbContext.Notes.Add(note);
