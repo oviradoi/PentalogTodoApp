@@ -36,11 +36,11 @@
         static void ShowNotes()
         {
             using var dbContext = new TodoDbContext();
-            var user = dbContext.Users.Include(u => u.Notes).ThenInclude(n => n.Likes).SingleOrDefault(u => u.Id == _userId);
+            var user = dbContext.Users.Include(u => u.Notes).SingleOrDefault(u => u.Id == _userId);
             Console.WriteLine($"You have {user.Notes.Count} notes");
             foreach (var note in user.Notes)
             {
-                Console.WriteLine($"Note id={note.Id} text={note.Text} created={note.CreationDate} likes={note.Likes.Count}");
+                Console.WriteLine($"Note id={note.Id} text={note.Text} created={note.CreationDate}");
             }
         }
 
@@ -101,33 +101,6 @@
             }
         }
 
-        static void LikeUnlike()
-        {
-            using var dbContext = new TodoDbContext();
-
-            Console.WriteLine("Enter the id of the note you want to like");
-            int noteId = int.Parse(Console.ReadLine());
-            var note = dbContext.Notes.SingleOrDefault(n => n.Id == noteId && n.UserId != _userId);
-            if (note == null)
-            {
-                Console.WriteLine("Note not found");
-                return;
-            }
-
-            Like existingLike = dbContext.Likes.SingleOrDefault(l => l.NoteId == note.Id && l.UserId == _userId);
-            if (existingLike != null)
-            {
-                dbContext.Likes.Remove(existingLike);
-            }
-            else
-            {
-                existingLike = new Like() { NoteId = note.Id, UserId = _userId };
-                dbContext.Likes.Add(existingLike);
-            }
-
-            dbContext.SaveChanges();
-        }
-
         static void Main(string[] args)
         {
             InitializeDatabase();
@@ -153,10 +126,6 @@
                 else if (choice == 4)
                 {
                     ModifyLastNote();
-                }
-                else if (choice == 5)
-                {
-                    LikeUnlike();
                 }
             } while (choice != 0);
         }
